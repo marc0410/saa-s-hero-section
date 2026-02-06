@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { Users, Building2, CreditCard, BarChart3, ChevronDown, BadgeCheck, Play } from "lucide-react"
+import { Users, Building2, CreditCard, BarChart3, ChevronDown, BadgeCheck, Upload, LayoutGrid, Banknote } from "lucide-react"
 import { CountUp } from "@/components/count-up"
 import { Button } from "@/components/ui/button"
 
-const rotatingTexts = [
-  "Publiez • Gerez • Encaissez",
-  "Meubles • Residences • Locations",
+const badgeSteps = [
+  { num: "01", label: "Publiez", icon: Upload },
+  { num: "02", label: "Gerez", icon: LayoutGrid },
+  { num: "03", label: "Encaissez", icon: Banknote },
 ]
 
 // Sample avatars for social proof
@@ -21,21 +22,17 @@ const avatars = [
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
-  const [currentTextIndex, setCurrentTextIndex] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const [activeStepIndex, setActiveStepIndex] = useState(0)
+  const [hoveredStep, setHoveredStep] = useState<number | null>(null)
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
-  // Rotating text animation
+  // Cycle active step
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsAnimating(true)
-      setTimeout(() => {
-        setCurrentTextIndex((prev) => (prev + 1) % rotatingTexts.length)
-        setIsAnimating(false)
-      }, 300)
+      setActiveStepIndex((prev) => (prev + 1) % badgeSteps.length)
     }, 3000)
     return () => clearInterval(interval)
   }, [])
@@ -58,20 +55,76 @@ export function HeroSection() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           {/* Centered Content - à gauche */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:flex-1">
-            {/* Animated Badge */}
+            {/* Badge Glassmorphism + Staged Layout */}
             <div
               className={`mb-8 transition-all duration-700 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-200/0 backdrop-blur-md border border-white/40 shadow-sm hover:shadow-md hover:shadow-[#156EE4]/10 transition-all duration-300 cursor-default">
-                <span 
-                  className={`text-sm font-semibold text-foreground transition-all duration-300 ${
-                    isAnimating ? "opacity-0 translate-y-2 blur-sm" : "opacity-100 translate-y-0 blur-0"
-                  }`}
+              {/* Bordure dégradé (blanc → transparent) */}
+              <div
+                className="rounded-full p-[1px] transition-shadow duration-300 hover:shadow-[0_0_24px_rgba(21,110,228,0.12)]"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 50%, transparent 100%)",
+                  boxShadow: "0 4px 24px rgba(21, 110, 228, 0.08)",
+                }}
+              >
+                {/* Fond glass + shimmer */}
+                <div
+                  className="relative overflow-hidden rounded-full py-2 px-5 backdrop-blur-[10px]"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.7)",
+                  }}
                 >
-                  {rotatingTexts[currentTextIndex]}
-                </span>
+                  {/* Lueur de balayage (shimmer) toutes les 5s */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-30 animate-shimmer"
+                    style={{
+                      background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
+                      backgroundSize: "200% 100%",
+                    }}
+                  />
+                  <div className="relative flex items-center gap-0">
+                    {badgeSteps.map((step, index) => {
+                      const Icon = step.icon
+                      const isActive = activeStepIndex === index
+                      const isHovered = hoveredStep === index
+                      return (
+                        <div key={step.num} className="flex items-center gap-0">
+                          {index > 0 && (
+                            <span
+                              className="mx-1 h-3 w-px shrink-0 rounded-full bg-current opacity-40"
+                              style={{ minHeight: "12px" }}
+                              aria-hidden
+                            />
+                          )}
+                          <span
+                            className="flex cursor-default items-center gap-1.5 rounded-lg py-1 px-2 transition-colors duration-200 hover:bg-white/50"
+                            onMouseEnter={() => setHoveredStep(index)}
+                            onMouseLeave={() => setHoveredStep(null)}
+                          >
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#156EE4]/10 text-[10px] font-bold text-[#156EE4]">
+                              {step.num}
+                            </span>
+                            <Icon
+                              key={`${index}-${isHovered}`}
+                              className={`shrink-0 text-[#0A1C3F] ${isHovered ? "animate-bounce-soft" : ""}`}
+                              size={14}
+                              strokeWidth={2}
+                            />
+                            <span
+                              className={`text-sm transition-all duration-200 ${
+                                isActive ? "font-bold text-[#0A1C3F]" : "font-medium text-[#0A1C3F]/80"
+                              }`}
+                            >
+                              {step.label}
+                            </span>
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -95,26 +148,61 @@ export function HeroSection() {
               Gerez biens, clients, contrats et paiements depuis une seule plateforme moderne.
             </p>
 
-            {/* CTA Buttons */}
+            {/* CTA + Social proof */}
             <div
-              className={`mt-10 flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-300 ${
+              className={`mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 transition-all duration-700 delay-300 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
               <Button
                 size="lg"
-                className="bg-[#156EE4] hover:bg-[#1259c7] text-white rounded-3xl px-8 py-6 text-base font-semibold  transition-all duration-300 hover:-translate-y-0.5"
+                className="bg-[#156EE4] hover:bg-[#1259c7] text-white rounded-3xl px-8 py-6 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 shrink-0"
               >
                 Telecharger l'application
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="rounded-3xl px-8 py-6 text-base font-semibold border-2 border-foreground/20 hover:border-foreground/40 hover:bg-white/50 transition-all duration-300 hover:-translate-y-0.5 bg-transparent"
+
+              {/* Social proof: avatars + stats */}
+              <div
+                className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 transition-all duration-500 delay-[400ms] ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+                }`}
               >
-                <Play className="w-4 h-4 mr-2" />
-                Regardez Demo
-              </Button>
+              {/* Avatars: 3 visages + 1 logo agence */}
+              <div className="flex items-center -space-x-2 shrink-0">
+                {avatars.slice(0, 3).map((avatar, i) => (
+                  <div
+                    key={i}
+                    className="relative w-6 h-6 rounded-full border-2 border-white shadow-sm overflow-hidden bg-muted ring-0"
+                    style={{ zIndex: 3 - i }}
+                  >
+                    <Image
+                      src={avatar}
+                      alt=""
+                      width={26}
+                      height={26}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+                <div
+                  className="relative w-6 h-6 rounded-full border-2 border-white shadow-sm bg-[#156EE4] flex items-center justify-center ring-0"
+                  style={{ zIndex: 0 }}
+                  aria-hidden
+                >
+                  <Building2 className="w-3 h-3 text-white" />
+                </div>
+              </div>
+              {/* Texte preuve sociale avec séparateur */}
+              <p
+                className={`text-sm font-light text-gray-600 tracking-wide transition-all duration-500 delay-500 ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+                }`}
+              >
+                <span>Utilisé par 10 482 locataires</span>
+                <span className="inline-block w-px h-4 bg-gray-300 mx-3 align-middle" aria-hidden />
+                <span>146 agences certifiées</span>
+              </p>
+              </div>
             </div>
           </div>
 
@@ -187,18 +275,19 @@ export function HeroSection() {
               {/* Phone frame */}
               <div className="relative bg-foreground rounded-[3rem] p-2 shadow-2xl shadow-black/40">
                 {/* Screen */}
-                <div className="relative rounded-[2.5rem] overflow-hidden bg-white">
+                <div className="relative rounded-[2.5rem] overflow-hidden bg-white aspect-[9/19]">
                   {/* Notch */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-foreground rounded-b-2xl z-10" />
                   
-                  {/* Dashboard Image */}
-                  <Image
-                    src="/screen.png"
-                    alt="immo+ Dashboard - Interface de gestion immobiliere"
-                    width={360}
-                    height={720}
-                    className="w-full h-auto"
-                    priority
+                  {/* Dashboard Video */}
+                  <video
+                    src="https://image2url.com/r2/default/videos/1770388652329-37e7f8cc-af63-488e-8f3c-ff718abaf655.mp4"
+                    className="absolute inset-0 w-full h-full object-cover object-top"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    aria-label="immo+ Dashboard - Interface de gestion immobilière"
                   />
                 </div>
               </div>

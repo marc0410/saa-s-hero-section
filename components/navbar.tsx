@@ -2,110 +2,133 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+
+const navLinks = [
+  { label: "Accueil", href: "#accueil" },
+  { label: "Fonctionnalités", href: "#fonctionnalites" },
+  { label: "Tarifs", href: "#tarifs" },
+]
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
+    const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const navLinks = [
-    { label: "Accueil", href: "#accueil" },
-    { label: "Fonctionnalites", href: "#fonctionnalites" },
-    { label: "Tarifs", href: "#tarifs" },
-    { label: "Contact", href: "#contact" },
-    // { label: "Agences", href: "#agences" },
-  ]
-
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[98%] max-w-7xl transition-all duration-300 ${
-        isScrolled ? "top-2" : "top-4"
+      className={`fixed left-1/2 top-4 z-50 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 transition-all duration-300 ease-out sm:top-5 ${
+        isScrolled ? "top-3 sm:top-4" : "top-4 sm:top-5"
       }`}
     >
+      {/* Pilule glassmorphism — desktop */}
       <div
-        className={`flex items-center justify-between px-4 py-4 rounded-2xl transition-all duration-300 
-         `}
+        className={`hidden items-center justify-between gap-4 rounded-full border border-white/40 bg-white/70 px-4 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-300 md:flex ${
+          isScrolled ? "py-2 px-4" : "py-2.5 px-4"
+        }`}
+        style={{
+          boxShadow: "0 8px 32px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.5) inset",
+        }}
       >
-        {/* Logo */}
-        <a href="/" className="flex items-center gap-2">
+        {/* Logo — icône seule, coins arrondis */}
+        <Link
+          href="/"
+          className="flex shrink-0 items-center justify-center rounded-2xl transition-opacity hover:opacity-90"
+        >
           <Image
             src="/logo.png"
-            alt="immo+"
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-xl object-contain"
+            alt="Immo+"
+            width={40}
+            height={40}
+            className="h-9 w-9 rounded-2xl object-contain sm:h-10 sm:w-10"
           />
-        </a>
+        </Link>
 
-        {/* Desktop Navigation - Floating Capsule */}
-        <div className="hidden md:flex items-center">
-  <nav className="flex items-center gap-1 px-2 py-2 rounded-full border border-[#4262FF]/60 shadow-lg shadow-blue-500/5">
-    {navLinks.map((link) => (
-      <a
-        key={link.href}
-        href={link.href}
-        className="relative text-sm font-semibold text-gray-700 hover:text-white hover:bg-blue-600 px-4 py-2 rounded-full transition-all duration-300 selection:group"
-      >
-        {link.label}
-        {/* Optionnel : petite barre de soulignement animée */}
-        {/* <span className="absolute inset-x-4 bottom-1 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" /> */}
-      </a>
-    ))}
-  </nav>
-</div>
-
-        {/* CTA Button */}
-        <div className="hidden md:block">
-          <Button
-            className="bg-[#156EE4] hover:bg-[#1259c7] text-white rounded-3xl px-6 font-medium  shadow-xl shadow-[#4262FF]/5  transition-all duration-300"
-          >
-            Télécharger
-          </Button>
+        {/* Liens centrés — espacement équilibré */}
+        <div className="flex flex-1 items-center justify-center gap-6 sm:gap-8">
+          {navLinks.map((link, index) => {
+            const isActive = index === 0
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="group relative px-4 py-2 text-[13px] font-medium text-neutral-700 transition-colors duration-200 sm:text-sm"
+              >
+                {/* Hover : pilule highlight qui suit le curseur visuellement */}
+                <span className="absolute inset-0 rounded-full bg-white/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                <span className="relative z-10">{link.label}</span>
+                {/* Indicateur actif : point lumineux sous le lien actif */}
+                {isActive && (
+                  <span
+                    className="absolute bottom-0 left-1/2 h-0.5 w-1 -translate-x-1/2 rounded-full bg-[#156EE4] opacity-70"
+                    aria-hidden
+                  />
+                )}
+              </Link>
+            )
+          })}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Bouton Télécharger — compact, même radius */}
+        <Link
+          href="#telecharger"
+          className="shrink-0 rounded-full bg-[#156EE4] px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#1259c7] hover:shadow-md hover:shadow-[#156EE4]/25 sm:text-sm"
+        >
+          Télécharger
+        </Link>
+      </div>
+
+      {/* Mobile : barre simple + menu */}
+      <div className="flex items-center justify-between rounded-full border border-white/40 bg-white/70 px-4 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl md:hidden">
+        <Link href="/" className="shrink-0">
+          <Image
+            src="/logo.png"
+            alt="Immo+"
+            width={40}
+            height={40}
+            className="h-9 w-9 rounded-2xl object-contain"
+          />
+        </Link>
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg hover:bg-black/5 transition-colors"
-          aria-label="Toggle menu"
+          className="rounded-full p-2 text-neutral-600 transition-colors hover:bg-white/50"
+          aria-label="Menu"
         >
-          {isMobileMenuOpen ? (
-            <X className="w-6 h-6 text-foreground" />
-          ) : (
-            <Menu className="w-6 h-6 text-foreground" />
-          )}
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Menu mobile — glassmorphism */}
       {isMobileMenuOpen && (
-        <div className="md:hidden mt-2 p-4 rounded-2xl bg-white/90 backdrop-blur-xl -lg shadow-black/5shadow">
-          <div className="flex flex-col gap-4">
+        <div
+          className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-white/40 bg-white/80 p-4 shadow-xl backdrop-blur-xl md:hidden"
+          style={{ boxShadow: "0 16px 48px rgba(0,0,0,0.1)" }}
+        >
+          <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-white/70"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
-            <Button
-              className="bg-[#156EE4] hover:bg-[#1259c7] text-white rounded-xl w-full font-medium mt-2"
+            <Link
+              href="#telecharger"
+              className="mt-2 rounded-full bg-[#156EE4] py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#1259c7]"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
-              Commencer
-            </Button>
+              Télécharger
+            </Link>
           </div>
         </div>
       )}

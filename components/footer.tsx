@@ -16,7 +16,7 @@ const assistanceLinks = [
   { label: "Comment ça marche ?", href: "#" },
   { label: "Support Client", href: "#" },
   { label: "Vérification des Biens", href: "#" },
-  { label: "Conditions d'Utilisation", href: "#" },
+  { label: "Conditions d'Utilisation", href: "/conditions-utilisation" },
 ]
 
 export function Footer() {
