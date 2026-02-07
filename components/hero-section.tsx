@@ -194,13 +194,13 @@ export function HeroSection() {
               </div>
               {/* Texte preuve sociale avec séparateur */}
               <p
-                className={`text-sm font-light text-gray-600 tracking-wide transition-all duration-500 delay-500 ${
+                className={` text-xs font-light text-gray-600 tracking-wide transition-all duration-500 delay-500 ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
                 }`}
               >
-                <span>Utilisé par 10 482 locataires</span>
-                <span className="inline-block w-px h-4 bg-gray-300 mx-3 align-middle" aria-hidden />
-                <span>146 agences certifiées</span>
+                <span>10K+ Utilisateurs actifs</span>
+                {/* <span className="inline-block w-px h-4 bg-gray-300 mx-3 align-middle" aria-hidden /> */}
+                {/* <span>146+ agences certifiées</span> */}
               </p>
               </div>
             </div>
