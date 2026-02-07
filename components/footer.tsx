@@ -18,6 +18,7 @@ const assistanceLinks = [
   { label: "Vérification des Biens", href: "#" },
   { label: "Conditions d'Utilisation", href: "/conditions-utilisation" },
   { label: "Politique de Confidentialité", href: "/politique-confidentialite" },
+  { label: "Suppression des données", href: "/suppression-donnees" },
 ]
 
 export function Footer() {
