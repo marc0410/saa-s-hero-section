@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/app-links"
 
 export function CtaDownloadSection() {
   
@@ -23,7 +24,7 @@ export function CtaDownloadSection() {
           </p>
           <div className="mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:gap-3">
             <Link
-              href="https://apps.apple.com"
+              href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="block h-9 w-auto transition-opacity hover:opacity-90 sm:h-10"
@@ -38,7 +39,7 @@ export function CtaDownloadSection() {
               />
             </Link>
             <Link
-              href="https://play.google.com"
+              href={PLAY_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="block h-9 w-auto transition-opacity hover:opacity-90 sm:h-10"

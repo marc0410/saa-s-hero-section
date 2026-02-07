@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Users, Building2, CreditCard, BarChart3, ChevronDown, BadgeCheck, Upload, LayoutGrid, Banknote } from "lucide-react"
 import { CountUp } from "@/components/count-up"
 import { Button } from "@/components/ui/button"
+import { getDownloadUrl, APP_STORE_URL } from "@/lib/app-links"
 
 const badgeSteps = [
   { num: "01", label: "Publiez", icon: Upload },
@@ -12,21 +13,25 @@ const badgeSteps = [
   { num: "03", label: "Encaissez", icon: Banknote },
 ]
 
-// Sample avatars for social proof
+// Avatars équipe pour la preuve sociale (images locales)
 const avatars = [
-  "https://i.pravatar.cc/32?img=1",
-  "https://i.pravatar.cc/32?img=2", 
-  "https://i.pravatar.cc/32?img=3",
-  "https://i.pravatar.cc/32?img=4",
+  { src: "/1_hr_director.jpg", alt: "Directeur RH" },
+  { src: "/1_hr_fem.png", alt: "Responsable RH" },
+  { src: "/1_support_director.jpg", alt: "Directeur Support" },
 ]
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [hoveredStep, setHoveredStep] = useState<number | null>(null)
+  const [downloadUrl, setDownloadUrl] = useState(APP_STORE_URL)
 
   useEffect(() => {
     setIsVisible(true)
+  }, [])
+
+  useEffect(() => {
+    setDownloadUrl(getDownloadUrl())
   }, [])
 
   // Cycle active step
@@ -39,7 +44,8 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative min-h-screen overflow-hidden"
+      id="accueil"
+      className="relative min-h-screen overflow-hidden scroll-mt-20"
       style={{
         background: "linear-gradient(180.91deg, #FFFFFF 35.36%, #A4F0FF 64.43%, #A0ECFE 69.28%, #156EE4 99.21%)",
         
@@ -55,15 +61,15 @@ export function HeroSection() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           {/* Centered Content - à gauche */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:flex-1">
-            {/* Badge Glassmorphism + Staged Layout */}
+            {/* Badge Glassmorphism + Staged Layout — responsive */}
             <div
-              className={`mb-8 transition-all duration-700 ${
+              className={`mb-6 sm:mb-8 transition-all duration-700 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
               {/* Bordure dégradé (blanc → transparent) */}
               <div
-                className="rounded-full p-[1px] transition-shadow duration-300 hover:shadow-[0_0_24px_rgba(21,110,228,0.12)]"
+                className="rounded-2xl sm:rounded-full p-[1px] transition-shadow duration-300 hover:shadow-[0_0_24px_rgba(21,110,228,0.12)] w-fit max-w-full"
                 style={{
                   background: "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 50%, transparent 100%)",
                   boxShadow: "0 4px 24px rgba(21, 110, 228, 0.08)",
@@ -71,7 +77,7 @@ export function HeroSection() {
               >
                 {/* Fond glass + shimmer */}
                 <div
-                  className="relative overflow-hidden rounded-full py-2 px-5 backdrop-blur-[10px]"
+                  className="relative overflow-hidden rounded-2xl sm:rounded-full py-1.5 px-3 sm:py-2 sm:px-5 backdrop-blur-[10px]"
                   style={{
                     background: "rgba(255, 255, 255, 0.7)",
                   }}
@@ -84,7 +90,7 @@ export function HeroSection() {
                       backgroundSize: "200% 100%",
                     }}
                   />
-                  <div className="relative flex items-center gap-0">
+                  <div className="relative flex flex-wrap items-center justify-center sm:justify-start gap-y-1 gap-x-0 sm:gap-x-0">
                     {badgeSteps.map((step, index) => {
                       const Icon = step.icon
                       const isActive = activeStepIndex === index
@@ -93,27 +99,25 @@ export function HeroSection() {
                         <div key={step.num} className="flex items-center gap-0">
                           {index > 0 && (
                             <span
-                              className="mx-1 h-3 w-px shrink-0 rounded-full bg-current opacity-40"
-                              style={{ minHeight: "12px" }}
+                              className="mx-0.5 sm:mx-1 h-2.5 sm:h-3 w-px shrink-0 rounded-full bg-current opacity-40 min-h-[10px] sm:min-h-[12px]"
                               aria-hidden
                             />
                           )}
                           <span
-                            className="flex cursor-default items-center gap-1.5 rounded-lg py-1 px-2 transition-colors duration-200 hover:bg-white/50"
+                            className="flex cursor-default items-center gap-1 sm:gap-1.5 rounded-lg py-0.5 px-1.5 sm:py-1 sm:px-2 transition-colors duration-200 hover:bg-white/50"
                             onMouseEnter={() => setHoveredStep(index)}
                             onMouseLeave={() => setHoveredStep(null)}
                           >
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#156EE4]/10 text-[10px] font-bold text-[#156EE4]">
+                            <span className="flex h-4 w-4 sm:h-5 sm:w-5 shrink-0 items-center justify-center rounded-full bg-[#156EE4]/10 text-[9px] sm:text-[10px] font-bold text-[#156EE4]">
                               {step.num}
                             </span>
                             <Icon
                               key={`${index}-${isHovered}`}
-                              className={`shrink-0 text-[#0A1C3F] ${isHovered ? "animate-bounce-soft" : ""}`}
-                              size={14}
+                              className={`shrink-0 w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#0A1C3F] ${isHovered ? "animate-bounce-soft" : ""}`}
                               strokeWidth={2}
                             />
                             <span
-                              className={`text-sm transition-all duration-200 ${
+                              className={`text-xs sm:text-sm transition-all duration-200 whitespace-nowrap ${
                                 isActive ? "font-bold text-[#0A1C3F]" : "font-medium text-[#0A1C3F]/80"
                               }`}
                             >
@@ -156,9 +160,16 @@ export function HeroSection() {
             >
               <Button
                 size="lg"
+                asChild
                 className="bg-[#156EE4] hover:bg-[#1259c7] text-white rounded-3xl px-8 py-6 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 shrink-0"
               >
-                Telecharger l'application
+                <a
+                  href={downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Télécharger maintenant
+                </a>
               </Button>
 
               {/* Social proof: avatars + stats */}
@@ -167,17 +178,17 @@ export function HeroSection() {
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
                 }`}
               >
-              {/* Avatars: 3 visages + 1 logo agence */}
+              {/* Avatars: 3 visages équipe + 1 logo agence */}
               <div className="flex items-center -space-x-2 shrink-0">
-                {avatars.slice(0, 3).map((avatar, i) => (
+                {avatars.map((avatar, i) => (
                   <div
-                    key={i}
+                    key={avatar.src}
                     className="relative w-6 h-6 rounded-full border-2 border-white shadow-sm overflow-hidden bg-muted ring-0"
-                    style={{ zIndex: 3 - i }}
+                    style={{ zIndex: avatars.length - i }}
                   >
                     <Image
-                      src={avatar}
-                      alt=""
+                      src={avatar.src}
+                      alt={avatar.alt}
                       width={26}
                       height={26}
                       className="w-full h-full object-cover"
@@ -276,8 +287,8 @@ export function HeroSection() {
               <div className="relative bg-foreground rounded-[3rem] p-2 shadow-2xl shadow-black/40">
                 {/* Screen */}
                 <div className="relative rounded-[2.5rem] overflow-hidden bg-white aspect-[9/19]">
-                  {/* Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-foreground rounded-b-2xl z-10" />
+                  {/* Notch — responsive : suit la largeur du téléphone (180 → 220 → 260px) */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-4 sm:w-28 sm:h-5 lg:w-32 lg:h-6 bg-foreground rounded-b-xl sm:rounded-b-2xl z-10" />
                   
                   {/* Dashboard Video */}
                   <video
@@ -335,6 +346,8 @@ export function HeroSection() {
         </div>
         </div>
       </div>
+
+      
     </section>
   )
 }

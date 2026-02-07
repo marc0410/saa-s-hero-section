@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/app-links"
 
 export function CtaAdventureSection() {
   return (
@@ -26,7 +27,7 @@ export function CtaAdventureSection() {
         {/* Boutons App Store / Google Play */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:mt-10 sm:gap-5">
           <Link
-            href="https://apps.apple.com"
+            href={APP_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block transition-opacity hover:opacity-90"
@@ -41,7 +42,7 @@ export function CtaAdventureSection() {
             />
           </Link>
           <Link
-            href="https://play.google.com"
+            href={PLAY_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block transition-opacity hover:opacity-90"

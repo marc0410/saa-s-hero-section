@@ -2,14 +2,15 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { X } from "lucide-react"
+import { Instagram } from "lucide-react"
+import { INSTAGRAM_URL, FACEBOOK_URL } from "@/lib/app-links"
 
 const servicesLinks = [
   { label: "Résidences Meublées", href: "#" },
   { label: "Locations Longue Durée", href: "#" },
   { label: "Achat de Terrains", href: "#" },
   { label: "Vente de Maisons", href: "#" },
-  { label: "Espace Professionnel", href: "#", active: true },
+  // { label: "Espace Professionnel", href: "#", active: true },
 ]
 
 const assistanceLinks = [
@@ -93,7 +94,7 @@ export function Footer() {
             </h3>
             <ul className="space-y-2.5 text-[15px] text-[#B4B4B4] sm:text-base">
               <li>Email: contact@immoplus.ci</li>
-              <li>WhatsApp: +225 XX XX XX XX XX</li>
+              <li>WhatsApp: +225 07 01 16 04 50</li>
               <li>Adresse: Abidjan, Côte d&apos;Ivoire</li>
               <li>
                 <Link
@@ -113,16 +114,16 @@ export function Footer() {
             </h3>
             <div className="flex items-center gap-4">
               <a
-                href="https://twitter.com"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#B4B4B4] transition-colors hover:text-white"
-                aria-label="Twitter / X"
+                aria-label="Instagram"
               >
-                <X className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2} />
+                <Instagram className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2} />
               </a>
               <a
-                href="https://facebook.com"
+                href={FACEBOOK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-6 w-6 items-center justify-center rounded-full border border-[#B4B4B4] text-[10px] font-bold text-[#B4B4B4] transition-colors hover:border-white hover:text-white sm:h-7 sm:w-7 sm:text-xs"
