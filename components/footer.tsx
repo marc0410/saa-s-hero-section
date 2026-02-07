@@ -17,6 +17,7 @@ const assistanceLinks = [
   { label: "Support Client", href: "#" },
   { label: "Vérification des Biens", href: "#" },
   { label: "Conditions d'Utilisation", href: "/conditions-utilisation" },
+  { label: "Politique de Confidentialité", href: "/politique-confidentialite" },
 ]
 
 export function Footer() {
